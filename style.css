@@ -1,0 +1,1204 @@
+/* ═══════════════════════════════════════════════
+   WoodDesk — Carpenter Desktop CSS
+   ═══════════════════════════════════════════════ */
+
+/* ─── RESET & BASE ─── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Wood palette */
+    --wood-dark: #5c3a10;
+    --wood-medium: #8a5a20;
+    --wood-base: #b07736;
+    --wood-light: #c9904a;
+    --wood-lightest: #e6b868;
+    --wood-cream: #f5deb3;
+    --wood-shadow: rgba(60, 30, 5, 0.45);
+    --plank-bg: #a06828;
+
+    /* Metal */
+    --metal-dark: #6a6a6a;
+    --metal-base: #8a8a8a;
+    --metal-light: #b0b0b0;
+
+    /* UI */
+    --radius: 8px;
+    --font: 'Outfit', sans-serif;
+    --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: none;
+    font-family: var(--font);
+    user-select: none;
+}
+
+/* ─── WOODEN SHELF BACKGROUND IMAGE ─── */
+body {
+    background: url('rak\ kayu\ windows.jpg') center center / cover no-repeat fixed;
+    background-color: #a06828;
+    /* fallback */
+}
+
+/* ─── CUSTOM CURSOR (nail) ─── */
+#nail-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100000;
+    /* Offset so the bottom tip is the click point, tilted 15° right */
+    transform: translate(-14px, -50px) rotate(15deg);
+    transition: transform 0.06s linear;
+    filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+#nail-cursor.pressing {
+    transform: translate(-14px, -46px) rotate(15deg) scale(0.96);
+    transition: transform 0.08s ease-in;
+}
+
+/* ─── HAMMER EFFECT ─── */
+#hammer-effect {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    /* Pivot from the bottom of the hammer head */
+    transform-origin: 50% 75%;
+    filter: drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+#hammer-effect.hidden {
+    display: none;
+}
+
+#hammer-effect.swing {
+    display: block;
+    animation: hammerSwing 0.4s ease-in-out forwards;
+}
+
+@keyframes hammerSwing {
+    0% {
+        transform: translate(-16px, -110px) rotate(-50deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-16px, -110px) rotate(8deg);
+        opacity: 1;
+    }
+
+    65% {
+        transform: translate(-16px, -100px) rotate(0deg);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translate(-16px, -100px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-16px, -100px) rotate(0deg);
+        opacity: 0;
+    }
+}
+
+/* ─── CROWBAR / LINGGIS EFFECT ─── */
+#crowbar-effect {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform-origin: 30% 20%;
+    filter: drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.5));
+}
+
+#crowbar-effect.hidden {
+    display: none;
+}
+
+#crowbar-effect.prying {
+    display: block;
+    animation: crowbarPry 0.6s ease-in-out forwards;
+}
+
+/* Crowbar prying animation: slides in, levers to pull nail, then exits */
+@keyframes crowbarPry {
+    0% {
+        transform: translate(-40px, -60px) rotate(-30deg);
+        opacity: 0;
+    }
+
+    20% {
+        transform: translate(-20px, -50px) rotate(-10deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-15px, -55px) rotate(15deg);
+        opacity: 1;
+    }
+
+    75% {
+        transform: translate(-10px, -70px) rotate(25deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-10px, -80px) rotate(30deg);
+        opacity: 0;
+    }
+}
+
+/* ─── MENU BAR (macOS / Linux style) ─── */
+#menu-bar {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    height: 40px;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: rgba(40, 20, 5, 0.55);
+    backdrop-filter: blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: blur(18px) saturate(1.6);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.menu-item {
+    position: relative;
+    padding: 8px 16px;
+    cursor: none;
+    border-radius: var(--radius);
+    transition: background var(--transition);
+}
+
+.menu-item:hover,
+.menu-item.open {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.menu-label {
+    color: var(--wood-cream);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Dropdown (wooden drawer) */
+.menu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background:
+        linear-gradient(180deg, #c9904a 0%, #b07736 100%);
+    border: 2px solid var(--wood-dark);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow:
+        0 8px 24px var(--wood-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.menu-item.open .menu-dropdown {
+    max-height: 300px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.menu-option {
+    padding: 10px 18px;
+    color: var(--wood-cream);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: none;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(92, 58, 16, 0.2);
+}
+
+.menu-option:last-child {
+    border-bottom: none;
+}
+
+.menu-option:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.menu-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--wood-dark), transparent);
+    margin: 2px 12px;
+}
+
+.menu-clock {
+    margin-left: auto;
+    color: var(--wood-cream);
+    font-size: 13px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+/* ─── MENU BAR 3-SECTION LAYOUT ─── */
+.menu-bar-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 2px;
+}
+
+.menu-bar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.menu-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+/* ─── APPLE / WOODDESK LOG ─── */
+.menu-apple {
+    font-size: 18px;
+    padding: 2px 10px 2px 4px;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    margin-right: 4px;
+    cursor: none;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+.menu-apple:hover {
+    opacity: 1;
+}
+
+/* ─── STATUS ICONS (right side of menu bar) ─── */
+.status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.88);
+    cursor: none;
+    transition: background 0.18s;
+}
+
+.status-icon:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.status-icon--notif {
+    position: relative;
+}
+
+/* ─── DESKTOP CLOCK WIDGET ─── */
+#desktop-clock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -58%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 10;
+    padding: 28px 48px 24px;
+    background: rgba(20, 10, 2, 0.38);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+#desk-clock-time {
+    font-family: 'Outfit', sans-serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: rgba(255, 240, 210, 0.95);
+    letter-spacing: 6px;
+    line-height: 1;
+    text-shadow: 0 2px 24px rgba(180, 120, 40, 0.35), 0 0 60px rgba(200, 140, 60, 0.15);
+}
+
+#desk-clock-date {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 220, 160, 0.7);
+    letter-spacing: 2px;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+/* ─── DESKTOP AREA ─── */
+#desktop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+/* ─── DESKTOP ICONS ─── */
+.desktop-icons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.desktop-icon {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90px;
+    padding: 10px 6px;
+    border-radius: var(--radius);
+    cursor: none;
+    transition:
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.desktop-icon:hover:not(.dragging) {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.desktop-icon.dragging {
+    opacity: 0.85;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    transform: scale(1.06);
+    z-index: 9999;
+}
+
+.desktop-icon.selected {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px var(--wood-lightest);
+    border-radius: var(--radius);
+}
+
+.icon-image {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+
+    /* Wooden plank background */
+    background:
+        linear-gradient(160deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 40%,
+            rgba(0, 0, 0, 0.08) 100%),
+        linear-gradient(180deg,
+            #c8893a 0%,
+            #a06828 30%,
+            #b5793a 55%,
+            #8a5520 75%,
+            #9a6228 100%);
+
+    /* Beveled wood-plank border */
+    border-top: 2px solid rgba(220, 170, 100, 0.80);
+    border-left: 2px solid rgba(200, 150, 80, 0.60);
+    border-right: 2px solid rgba(80, 45, 10, 0.55);
+    border-bottom: 2px solid rgba(60, 30, 5, 0.70);
+
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.45),
+        inset 0 2px 4px rgba(255, 200, 100, 0.18),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.22);
+
+    transition: filter var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+/* Wood grain lines overlay */
+.icon-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: repeating-linear-gradient(175deg,
+            transparent 0px,
+            transparent 5px,
+            rgba(0, 0, 0, 0.045) 5px,
+            rgba(0, 0, 0, 0.045) 6px,
+            transparent 6px,
+            transparent 12px,
+            rgba(255, 255, 255, 0.04) 12px,
+            rgba(255, 255, 255, 0.04) 13px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Keep SVG/content above grain overlay */
+.icon-image>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Make SVG symbols light/visible on dark wood */
+.icon-image svg {
+    filter: brightness(1.4) saturate(0.7) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+}
+
+.desktop-icon:hover:not(.dragging) .icon-image {
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.50),
+        inset 0 2px 4px rgba(255, 200, 100, 0.22),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Dock pin SVG: same treatment */
+.dock-pin-img svg {
+    filter: brightness(1.4) saturate(0.7) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+
+.icon-label {
+    margin-top: 4px;
+    color: var(--wood-cream);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+    max-width: 80px;
+    word-wrap: break-word;
+}
+
+/* ─── WINDOWS (wooden boards/panels) ─── */
+.wood-window {
+    position: absolute;
+    min-width: 340px;
+    min-height: 220px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+        0 6px 20px var(--wood-shadow),
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition:
+        box-shadow 0.2s,
+        filter 0.2s,
+        transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    cursor: none;
+}
+
+/* Active / inactive states */
+.wood-window.active {
+    box-shadow:
+        0 10px 35px rgba(40, 20, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    filter: brightness(1.05);
+}
+
+.wood-window:not(.active) {
+    filter: brightness(0.88);
+}
+
+/* Title bar (top plank) */
+.window-titlebar {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background:
+        repeating-linear-gradient(90deg,
+            transparent, transparent 50px,
+            rgba(0, 0, 0, 0.03) 50px, rgba(0, 0, 0, 0.03) 51px),
+        linear-gradient(180deg, #c9904a 0%, #a06828 100%);
+    border-bottom: 2px solid var(--wood-dark);
+    cursor: none;
+    flex-shrink: 0;
+}
+
+.window-title {
+    flex: 1;
+    color: var(--wood-cream);
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    padding-left: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Window control buttons */
+.window-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.win-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    transition:
+        background 0.2s,
+        transform 0.15s;
+    padding: 0;
+}
+
+.win-btn:hover {
+    background: rgba(0, 0, 0, 0.22);
+    transform: scale(1.1);
+}
+
+.win-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Close button special */
+.win-btn.close-btn:hover {
+    background: rgba(180, 50, 30, 0.45);
+}
+
+/* Window body (content area) */
+.window-body {
+    flex: 1;
+    background:
+        repeating-linear-gradient(0deg,
+            transparent, transparent 30px,
+            rgba(92, 58, 16, 0.06) 30px, rgba(92, 58, 16, 0.06) 31px),
+        linear-gradient(180deg, #e6c88a 0%, #dab678 50%, #d4a860 100%);
+    padding: 16px;
+    overflow-y: auto;
+    color: var(--wood-dark);
+    font-size: 13px;
+    line-height: 1.6;
+    cursor: none;
+}
+
+.window-body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.window-body::-webkit-scrollbar-track {
+    background: rgba(92, 58, 16, 0.1);
+    border-radius: 5px;
+}
+
+.window-body::-webkit-scrollbar-thumb {
+    background: var(--wood-base);
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* ─── WINDOW ANIMATIONS ─── */
+.wood-window.opening {
+    animation: windowOpen 0.4s ease-out forwards;
+}
+
+@keyframes windowOpen {
+    0% {
+        transform: scale(0.6) translateY(30px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.wood-window.closing {
+    animation: windowClose 0.55s ease-in-out forwards;
+    pointer-events: none;
+}
+
+/* Nail-pulling effect: pushes down slightly, then lifts upward like extracting a nail */
+@keyframes windowClose {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    20% {
+        transform: translateY(6px) scale(1.01);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-25px) scale(1.02);
+        opacity: 1;
+    }
+
+    75% {
+        transform: translateY(-60px) scale(0.97);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateY(-100px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+.wood-window.minimizing {
+    animation: windowMinimize 0.4s ease-in forwards;
+    pointer-events: none;
+}
+
+@keyframes windowMinimize {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.15) translateY(300px);
+        opacity: 0;
+    }
+}
+
+.wood-window.restoring {
+    animation: windowRestore 0.35s ease-out forwards;
+}
+
+@keyframes windowRestore {
+    0% {
+        transform: scale(0.15) translateY(300px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.wood-window.maximizing {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* ─── BOTTOM DOCK ─── */
+#taskbar {
+    display: inline-flex !important;
+    position: fixed;
+    bottom: 14px;
+    left: 20px;
+    width: auto;
+    height: 52px;
+    z-index: 9000;
+    align-items: center;
+    padding: 0 14px;
+    background: rgba(20, 10, 2, 0.65);
+    backdrop-filter: blur(22px) saturate(1.6);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    gap: 0;
+}
+
+/* ─── WEATHER WIDGET ─── */
+#dock-weather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 14px;
+    border-right: 1px solid rgba(255, 255, 255, 0.10);
+    margin-right: 12px;
+    min-width: 100px;
+}
+
+#dock-weather-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+#dock-weather-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+#dock-weather-temp {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 240, 200, 0.95);
+}
+
+#dock-weather-desc {
+    font-size: 10px;
+    color: rgba(255, 220, 160, 0.65);
+}
+
+/* ─── DOCK CENTER (pinned apps + running apps) ─── */
+#dock-center {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ─── PINNED APP ICONS ─── */
+.dock-pin {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    cursor: none;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.18s;
+}
+
+.dock-pin:hover {
+    transform: translateY(-8px) scale(1.18);
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.dock-pin:hover .dock-pin-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dock-pin-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+
+    /* Wooden plank */
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.08) 0%, transparent 40%, rgba(0, 0, 0, 0.08) 100%),
+        linear-gradient(180deg, #c8893a 0%, #a06828 30%, #b5793a 55%, #8a5520 75%, #9a6228 100%);
+
+    border-top: 2px solid rgba(220, 170, 100, 0.80);
+    border-left: 2px solid rgba(200, 150, 80, 0.60);
+    border-right: 2px solid rgba(80, 45, 10, 0.55);
+    border-bottom: 2px solid rgba(60, 30, 5, 0.70);
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.40),
+        inset 0 2px 3px rgba(255, 200, 100, 0.15),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.20);
+}
+
+/* Wood grain on dock icons */
+.dock-pin-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: repeating-linear-gradient(175deg,
+            transparent 0px,
+            transparent 4px,
+            rgba(0, 0, 0, 0.04) 4px,
+            rgba(0, 0, 0, 0.04) 5px,
+            transparent 5px,
+            transparent 10px,
+            rgba(255, 255, 255, 0.03) 10px,
+            rgba(255, 255, 255, 0.03) 11px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.dock-pin-img>* {
+    position: relative;
+    z-index: 1;
+}
+
+.dock-pin-label {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: rgba(20, 10, 2, 0.85);
+    color: rgba(255, 240, 200, 0.95);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.dock-pin-dot {
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.dock-pin.running .dock-pin-dot {
+    background: rgba(255, 220, 120, 0.8);
+}
+
+/* ─── DOCK SEPARATOR ─── */
+.dock-separator {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 6px;
+}
+
+/* ─── TASKBAR ITEMS (running apps) ─── */
+#taskbar-items {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.taskbar-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    cursor: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+    max-width: 140px;
+    font-size: 12px;
+    color: rgba(255, 240, 200, 0.9);
+}
+
+.taskbar-item:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-2px);
+}
+
+.taskbar-item.active {
+    background: rgba(255, 220, 100, 0.15);
+    box-shadow: 0 0 0 1px rgba(255, 220, 100, 0.2);
+}
+
+.taskbar-item .tb-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.taskbar-item .tb-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 220, 100, 0.8);
+    flex-shrink: 0;
+}
+
+/* ─── SYSTEM TRAY ─── */
+#dock-tray {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-left: 14px;
+    border-left: 1px solid rgba(255, 255, 255, 0.10);
+    margin-left: 12px;
+}
+
+.tray-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.80);
+    cursor: none;
+    transition: background 0.18s;
+}
+
+.tray-icon:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.dock-tray-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 4px;
+}
+
+/* ─── DOCK CLOCK ─── */
+#dock-clock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+    padding: 0 6px;
+    cursor: none;
+}
+
+#dock-clock-time {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 240, 200, 0.95);
+    letter-spacing: 0.5px;
+}
+
+#dock-clock-date {
+    font-size: 10px;
+    color: rgba(255, 220, 160, 0.65);
+    letter-spacing: 0.3px;
+}
+
+/* old taskbar-item overrides removed — see new dock CSS above */
+
+
+/* ─── WINDOW CONTENT SPECIFIC STYLES ─── */
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+}
+
+.folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: var(--radius);
+    cursor: none;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.folder-item:hover {
+    background: rgba(138, 90, 32, 0.12);
+    transform: translateY(-2px);
+}
+
+.folder-item svg {
+    width: 40px;
+    height: 36px;
+    margin-bottom: 4px;
+}
+
+.folder-item span {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--wood-dark);
+    text-align: center;
+}
+
+/* Workshop content */
+.workshop-tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    background: rgba(138, 90, 32, 0.08);
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.workshop-tool:hover {
+    background: rgba(138, 90, 32, 0.16);
+}
+
+.workshop-tool svg {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.workshop-tool .tool-info {
+    flex: 1;
+}
+
+.workshop-tool .tool-name {
+    font-weight: 600;
+    color: var(--wood-dark);
+    font-size: 13px;
+}
+
+.workshop-tool .tool-desc {
+    font-size: 11px;
+    color: var(--wood-medium);
+    margin-top: 2px;
+}
+
+/* Ruler calculator */
+.ruler-calc {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ruler-calc label {
+    font-weight: 600;
+    color: var(--wood-dark);
+    font-size: 12px;
+}
+
+.ruler-calc input,
+.ruler-calc select {
+    padding: 8px 12px;
+    border: 2px solid var(--wood-base);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--wood-dark);
+    cursor: none;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.ruler-calc input:focus,
+.ruler-calc select:focus {
+    border-color: var(--wood-medium);
+}
+
+.ruler-calc .calc-row {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+}
+
+.ruler-calc .calc-row>div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calc-result {
+    padding: 12px;
+    background: rgba(138, 90, 32, 0.1);
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--wood-dark);
+    text-align: center;
+}
+
+/* Notes */
+.notes-area {
+    width: 100%;
+    min-height: 200px;
+    padding: 12px;
+    border: 2px solid var(--wood-base);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.5);
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--wood-dark);
+    line-height: 1.7;
+    resize: vertical;
+    cursor: none;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image:
+        repeating-linear-gradient(transparent, transparent 27px,
+            rgba(138, 90, 32, 0.12) 27px, rgba(138, 90, 32, 0.12) 28px);
+    background-position: 0 12px;
+}
+
+.notes-area:focus {
+    border-color: var(--wood-medium);
+}
+
+/* About window */
+.about-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.about-content h2 {
+    font-size: 22px;
+    color: var(--wood-dark);
+    margin-bottom: 8px;
+}
+
+.about-content .version {
+    font-size: 12px;
+    color: var(--wood-medium);
+    margin-bottom: 16px;
+}
+
+.about-content p {
+    font-size: 13px;
+    color: var(--wood-dark);
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0 auto;
+}
+
+/* ─── CLICK RIPPLE ─── */
+.click-ripple {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230, 184, 104, 0.5) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 99998;
+    animation: rippleFade 0.4s ease-out forwards;
+}
+
+@keyframes rippleFade {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
