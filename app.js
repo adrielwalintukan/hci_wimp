@@ -2,7 +2,52 @@
    WoodDesk — Carpenter Desktop JavaScript
    ═══════════════════════════════════════════════ */
 
+/* ─── CABINET DOOR LOGIN ─── */
 (function () {
+    'use strict';
+
+    const screen = document.getElementById('login-screen');
+    const btn = document.getElementById('login-btn');
+    const doorL = document.getElementById('door-left');
+    const doorR = document.getElementById('door-right');
+
+    if (!screen) return;
+
+    let opened = false;
+
+    function openDoors() {
+        if (opened) return;
+        opened = true;
+        btn.disabled = true;
+
+        // Swing both doors open simultaneously
+        doorL.classList.add('opening');
+        doorR.classList.add('opening');
+
+        // Wait for the right door animation to finish, then reveal desktop
+        doorR.addEventListener('animationend', function () {
+            // Fade out the login overlay
+            screen.classList.add('hidden');
+
+            // After fade, fully remove from layout
+            screen.addEventListener('transitionend', function onFade(e) {
+                if (e.propertyName !== 'opacity') return;
+                screen.removeEventListener('transitionend', onFade);
+                screen.style.display = 'none';
+            });
+        }, { once: true });
+    }
+
+    // Button click OR clicking either door opens them
+    btn.addEventListener('click', openDoors);
+    doorL.addEventListener('click', openDoors);
+    doorR.addEventListener('click', openDoors);
+
+})();
+
+/* ─── MAIN DESKTOP ─── */
+(function () {
+
     'use strict';
 
     // ─── GLOBALS ───
@@ -57,8 +102,8 @@
     const deskClockDate = document.getElementById('desk-clock-date');
     const dockClockTime = document.getElementById('dock-clock-time');
     const dockClockDate = document.getElementById('dock-clock-date');
-    const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
     function updateClock() {
         const now = new Date();
@@ -94,22 +139,49 @@
             const rect = pin.getBoundingClientRect();
             const cx = rect.left + rect.width / 2;
             const cy = rect.top;
-            // mark as running
             pin.classList.add('running');
+
+            // Map action → display name for puzzle title
+            const nameMap = {
+                'open-workshop': 'Bengkel Alat',
+                'open-calculator': 'Kalkulator Alat',
+                'open-notes': 'Catatan Kayu',
+                'about': 'Tentang WoodDesk'
+            };
+            const appName = nameMap[action] || action;
+
             playHammer(cx, cy, () => {
-                switch (action) {
-                    case 'open-workshop':
-                        createWindow('Workshop', generateWorkshopContent(), cx, cy); break;
-                    case 'open-calculator':
-                        createWindow('Ruler Calculator', generateCalculatorContent(), cx, cy); break;
-                    case 'open-notes':
-                        createWindow('Notes', generateNotesContent(), cx, cy); break;
-                    case 'about':
-                        createWindow('About WoodDesk', generateAboutContent(), cx, cy); break;
+                if (window.PuzzleSystem) {
+                    // Show puzzle before opening the app
+                    window.PuzzleSystem.show(appName, () => {
+                        switch (action) {
+                            case 'open-workshop':
+                                createWindow('Workshop', generateWorkshopContent(), cx, cy); break;
+                            case 'open-calculator':
+                                createWindow('Ruler Calculator', generateCalculatorContent(), cx, cy); break;
+                            case 'open-notes':
+                                createWindow('Notes', generateNotesContent(), cx, cy); break;
+                            case 'about':
+                                createWindow('About WoodDesk', generateAboutContent(), cx, cy); break;
+                        }
+                    });
+                } else {
+                    // Fallback: open directly
+                    switch (action) {
+                        case 'open-workshop':
+                            createWindow('Workshop', generateWorkshopContent(), cx, cy); break;
+                        case 'open-calculator':
+                            createWindow('Ruler Calculator', generateCalculatorContent(), cx, cy); break;
+                        case 'open-notes':
+                            createWindow('Notes', generateNotesContent(), cx, cy); break;
+                        case 'about':
+                            createWindow('About WoodDesk', generateAboutContent(), cx, cy); break;
+                    }
                 }
             });
         });
     });
+
 
     // ─── MENU SYSTEM ───
     document.querySelectorAll('.menu-item').forEach(item => {
@@ -139,32 +211,32 @@
     function handleMenuAction(action, e) {
         switch (action) {
             case 'new-window':
-                createWindow('New Window', generateFolderContent('New Window'), e.clientX, e.clientY);
+                createWindow('Jendela Baru', generateFolderContent('Jendela Baru'), e.clientX, e.clientY);
                 break;
             case 'new-folder':
-                createWindow('New Folder', generateFolderContent('New Folder'), e.clientX, e.clientY);
+                createWindow('Folder Baru', generateFolderContent('Folder Baru'), e.clientX, e.clientY);
                 break;
             case 'close-all':
                 windows.forEach((w) => closeWindow(w.el));
                 break;
             case 'open-workshop':
                 playHammer(e.clientX, e.clientY, () => {
-                    createWindow('Workshop', generateWorkshopContent(), e.clientX, e.clientY);
+                    createWindow('Bengkel Alat', generateWorkshopContent(), e.clientX, e.clientY);
                 });
                 break;
             case 'open-calculator':
                 playHammer(e.clientX, e.clientY, () => {
-                    createWindow('Ruler Calculator', generateCalculatorContent(), e.clientX, e.clientY);
+                    createWindow('Kalkulator Alat', generateCalculatorContent(), e.clientX, e.clientY);
                 });
                 break;
             case 'open-notes':
                 playHammer(e.clientX, e.clientY, () => {
-                    createWindow('Notes', generateNotesContent(), e.clientX, e.clientY);
+                    createWindow('Catatan Kayu', generateNotesContent(), e.clientX, e.clientY);
                 });
                 break;
             case 'about':
                 playHammer(e.clientX, e.clientY, () => {
-                    createWindow('About WoodDesk', generateAboutContent(), e.clientX, e.clientY);
+                    createWindow('Tentang WoodDesk', generateAboutContent(), e.clientX, e.clientY);
                 });
                 break;
             case 'arrange':
@@ -248,22 +320,28 @@
             icon.classList.add('selected');
         });
 
-        // double click → hammer + open
+        // double click → hammer + open (show puzzle for folders)
         icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
             if (moved) return;
             const name = icon.dataset.name;
             const type = icon.dataset.type;
-            playHammer(e.clientX, e.clientY, () => {
-                let content;
-                if (type === 'folder') {
-                    content = generateFolderContent(name);
-                } else {
-                    content = generateAppContent(name);
-                }
-                createWindow(name, content);
-            });
+
+            if (type === 'folder' && window.PuzzleSystem) {
+                // Show puzzle board — only open folder after all puzzles solved
+                playHammer(e.clientX, e.clientY, () => {
+                    window.PuzzleSystem.show(name, () => {
+                        createWindow(name, generateFolderContent(name));
+                    });
+                });
+            } else {
+                // Apps open immediately
+                playHammer(e.clientX, e.clientY, () => {
+                    createWindow(name, generateAppContent(name));
+                });
+            }
         });
+
     });
 
     // deselect icons on desktop click
@@ -528,7 +606,7 @@
     // ─── CONTENT GENERATORS ───
 
     function generateFolderContent(name) {
-        const items = ['Plans.docx', 'Materials.xlsx', 'Draft', 'Blueprints', 'Notes.txt'];
+        const items = ['Rencana.docx', 'Bahan.xlsx', 'Draf', 'Cetak_Biru', 'Catatan.txt'];
         let html = `<div class="folder-grid">`;
         items.forEach(item => {
             const isFolder = !item.includes('.');
@@ -544,43 +622,43 @@
 
     function generateAppContent(name) {
         switch (name) {
-            case 'Workshop': return generateWorkshopContent();
-            case 'Ruler Calculator': return generateCalculatorContent();
-            case 'Notes': return generateNotesContent();
-            case 'About WoodDesk': return generateAboutContent();
+            case 'Bengkel Alat': return generateWorkshopContent();
+            case 'Kalkulator Alat': return generateCalculatorContent();
+            case 'Catatan Kayu': return generateNotesContent();
+            case 'Tentang WoodDesk': return generateAboutContent();
             default: return generateFolderContent(name);
         }
     }
 
     function generateWorkshopContent() {
         return `
-      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">🔨 Workshop Tools</h3>
+      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">🔨 Alat-Alat Bengkel</h3>
       <div class="workshop-tool">
         ${toolHammerSVG()}
         <div class="tool-info">
-          <div class="tool-name">Claw Hammer</div>
-          <div class="tool-desc">16 oz, fiberglass handle — great for general carpentry</div>
+          <div class="tool-name">Palu Cakar</div>
+          <div class="tool-desc">16 oz, gagang fiberglass — andalan pekerjaan kayu sehari-hari</div>
         </div>
       </div>
       <div class="workshop-tool">
         ${toolSawSVG()}
         <div class="tool-info">
-          <div class="tool-name">Hand Saw</div>
-          <div class="tool-desc">20" crosscut saw — Japanese-style pull cut</div>
+          <div class="tool-name">Gergaji Tangan</div>
+          <div class="tool-desc">50 cm, gigi halus — potongan bersih seperti pro</div>
         </div>
       </div>
       <div class="workshop-tool">
         ${toolChiselSVG()}
         <div class="tool-info">
-          <div class="tool-name">Wood Chisel Set</div>
-          <div class="tool-desc">6-piece set, 6mm to 32mm — Sheffield steel</div>
+          <div class="tool-name">Set Pahat Kayu</div>
+          <div class="tool-desc">Set 6 buah, 6mm–32mm — baja berkualitas tinggi</div>
         </div>
       </div>
       <div class="workshop-tool">
         ${toolRulerSVG()}
         <div class="tool-info">
-          <div class="tool-name">Combination Square</div>
-          <div class="tool-desc">12" blade with spirit level — precision measuring</div>
+          <div class="tool-name">Penggaris Siku</div>
+          <div class="tool-desc">30 cm dengan waterpass — ukur presisi sebelum memotong</div>
         </div>
       </div>
     `;
@@ -588,36 +666,36 @@
 
     function generateCalculatorContent() {
         return `
-      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">📐 Ruler Calculator</h3>
+      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">📐 Kalkulator Penggaris</h3>
       <div class="ruler-calc">
         <div class="calc-row">
           <div>
-            <label>Length</label>
+            <label>Panjang</label>
             <input type="number" id="calc-length" placeholder="0" value="">
           </div>
           <div>
-            <label>Width</label>
+            <label>Lebar</label>
             <input type="number" id="calc-width" placeholder="0" value="">
           </div>
           <div>
-            <label>Unit</label>
+            <label>Satuan</label>
             <select id="calc-unit">
               <option value="cm">cm</option>
-              <option value="in">inches</option>
-              <option value="ft">feet</option>
-              <option value="m">meters</option>
+              <option value="in">inci</option>
+              <option value="ft">kaki</option>
+              <option value="m">meter</option>
             </select>
           </div>
         </div>
-        <div class="calc-result" id="calc-result">Enter dimensions above</div>
+        <div class="calc-result" id="calc-result">Masukkan dimensi di atas</div>
       </div>
     `;
     }
 
     function generateNotesContent() {
         return `
-      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">✏️ Wood Notes</h3>
-      <textarea class="notes-area" placeholder="Write your woodworking notes here...&#10;&#10;- Measure twice, cut once&#10;- Sand with the grain&#10;- Apply finish in thin coats"></textarea>
+      <h3 style="margin-bottom:12px;color:#5c3a10;font-size:16px;">✏️ Catatan Kayu</h3>
+      <textarea class="notes-area" placeholder="Tulis catatan proyekmu di sini...&#10;&#10;- Ukur dua kali, potong sekali&#10;- Amplas searah serat kayu&#10;- Oleskan pernis tipis-tipis&#10;- Jangan lupa pakai penggaris siku!"></textarea>
     `;
     }
 
@@ -625,17 +703,26 @@
         return `
       <div class="about-content">
         <h2>🪵 WoodDesk</h2>
-        <div class="version">Version 1.0 — Handcrafted Edition</div>
-        <p>
-          A whimsical desktop interface using a carpenter & woodworking metaphor.
-          Built to demonstrate strong metaphor-based HCI design using the WIMP paradigm.
+        <div class="version">Versi 1.0 — Edisi Buatan Tangan</div>
+        <p style="text-align:left;margin-top:14px;line-height:1.8;">
+          Kepada Yth. <strong>Sir George Tangka</strong>,
         </p>
-        <p style="margin-top:12px;">
-          <strong>Features:</strong> Wooden windows, tool-based icons,
-          nail cursor, hammer interactions, drawer menus, and shelf-slot taskbar.
+        <p style="text-align:left;margin-top:8px;line-height:1.8;">
+          Kami membuat tugas ini dengan segenap hati dan dedikasi penuh.
+          WoodDesk lahir dari semangat kami untuk menghadirkan pengalaman
+          antarmuka yang tidak hanya fungsional, tetapi juga terasa hangat,
+          menyenangkan, dan bermakna — seperti aroma kayu segar di pagi hari.
         </p>
-        <p style="margin-top:12px;font-size:11px;color:#8a5a20;">
-          Made with 🪚 and ❤️ — Pure HTML/CSS/JS
+        <p style="text-align:left;margin-top:8px;line-height:1.8;">
+          Setiap detail, mulai dari kursor paku, animasi palu, pintu lemari kayu,
+          hingga puzzle bengkel, kami rancang dengan penuh perhatian untuk
+          mencerminkan metafora dunia pertukangan yang kuat dalam paradigma WIMP.
+        </p>
+        <p style="text-align:left;margin-top:8px;line-height:1.8;">
+          Semoga karya sederhana ini dapat memberikan senyum dan nilai yang baik. 🙏
+        </p>
+        <p style="margin-top:14px;font-size:11px;color:#8a5a20;text-align:center;">
+          Dibuat dengan 🪚 dan ❤️ — HTML/CSS/JS Murni
         </p>
       </div>
     `;
@@ -655,15 +742,15 @@
             const w = parseFloat(widInput.value) || 0;
             const u = unitSel.value;
             if (l <= 0 || w <= 0) {
-                resultDiv.textContent = 'Enter dimensions above';
+                resultDiv.textContent = 'Masukkan dimensi di atas';
                 return;
             }
             const area = (l * w).toFixed(2);
             const perimeter = ((l + w) * 2).toFixed(2);
             const diagonal = Math.sqrt(l * l + w * w).toFixed(2);
             resultDiv.innerHTML = `
-        Area: <strong>${area} ${u}²</strong> &nbsp;|&nbsp;
-        Perimeter: <strong>${perimeter} ${u}</strong> &nbsp;|&nbsp;
+        Luas: <strong>${area} ${u}²</strong> &nbsp;|&nbsp;
+        Keliling: <strong>${perimeter} ${u}</strong> &nbsp;|&nbsp;
         Diagonal: <strong>${diagonal} ${u}</strong>
       `;
         }

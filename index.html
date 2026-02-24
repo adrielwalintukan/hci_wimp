@@ -14,6 +14,246 @@
 
 <body>
 
+    <!-- ═══════════════ LOGIN SCREEN — WOODEN CABINET DOORS ═══════════════ -->
+    <div id="login-screen">
+
+        <!-- warm interior glow revealed as doors open -->
+        <div id="cabinet-interior"></div>
+
+        <!-- LEFT DOOR -->
+        <div id="door-left" class="cabinet-door">
+            <div class="door-grain"></div>
+            <!-- decorative inset panels -->
+            <div class="door-panel upper"></div>
+            <div class="door-panel lower"></div>
+            <!-- hinges (outer/left edge) -->
+            <div class="door-hinge" style="top:18%"></div>
+            <div class="door-hinge" style="top:82%"></div>
+            <!-- knob near seam -->
+            <div class="door-knob left-knob"></div>
+        </div>
+
+        <!-- RIGHT DOOR -->
+        <div id="door-right" class="cabinet-door">
+            <div class="door-grain"></div>
+            <div class="door-panel upper"></div>
+            <div class="door-panel lower"></div>
+            <!-- hinges (outer/right edge) -->
+            <div class="door-hinge right-hinge" style="top:18%"></div>
+            <div class="door-hinge right-hinge" style="top:82%"></div>
+            <!-- knob near seam -->
+            <div class="door-knob right-knob"></div>
+        </div>
+
+        <!-- CENTER SIGN overlay (always on top, fades with the screen) -->
+        <div id="workshop-entrance">
+            <div id="workshop-sign">
+                <svg viewBox="0 0 72 52" width="64" height="46">
+                    <!-- workbench -->
+                    <rect x="2" y="20" width="68" height="10" rx="3" fill="#c8893a" stroke="#8a5520"
+                        stroke-width="1.5" />
+                    <rect x="4" y="22" width="64" height="4" rx="2" fill="#dba660" opacity="0.5" />
+                    <rect x="8" y="30" width="7" height="18" rx="2" fill="#a06828" stroke="#8a5520" stroke-width="1" />
+                    <rect x="57" y="30" width="7" height="18" rx="2" fill="#a06828" stroke="#8a5520" stroke-width="1" />
+                    <!-- hammer -->
+                    <rect x="26" y="10" width="26" height="11" rx="3" fill="#6e6e6e" stroke="#4a4a4a"
+                        stroke-width="1.5" />
+                    <rect x="36" y="21" width="4" height="13" rx="2" fill="#b07736" stroke="#8a5520" stroke-width="1" />
+                </svg>
+                <h1 id="login-title">WoodDesk</h1>
+                <p id="login-sub">Bengkel Kayu WoodDesk</p>
+            </div>
+            <button id="login-btn">🔨 Buka Desktop</button>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════ PUZZLE OVERLAY ═══════════════ -->
+    <div id="puzzle-overlay" class="puzzle-hidden">
+        <div id="puzzle-board">
+            <div id="puzzle-header">
+                <span id="puzzle-folder-icon">📁</span>
+                <div>
+                    <h2 id="puzzle-title">Folder Terkunci</h2>
+                    <p id="puzzle-subtitle">Selesaikan tantangan bengkel untuk membukanya</p>
+                </div>
+                <button id="puzzle-close-btn" title="Close">✕</button>
+            </div>
+
+            <div id="puzzle-grid">
+
+                <!-- ──── SCREW PUZZLE ──── -->
+                <div class="puzzle-tile" id="ptile-screw" data-puzzle="screw">
+                    <div class="tile-label">Putar Sekrupnya</div>
+                    <div class="puzzle-scene" id="pscene-screw">
+                        <svg class="puzzle-svg" viewBox="0 0 160 120">
+                            <!-- plank -->
+                            <rect x="10" y="60" width="140" height="40" rx="4" fill="#b07736" stroke="#7a4a18"
+                                stroke-width="2" />
+                            <rect x="10" y="60" width="140" height="8" rx="2" fill="#c9904a" />
+                            <!-- grain -->
+                            <line x1="10" y1="78" x2="150" y2="78" stroke="#8a5520" stroke-width="1.5" opacity="0.5" />
+                            <!-- hole -->
+                            <circle id="ps-hole" cx="80" cy="80" r="10" fill="#5a3010" stroke="#3a1a05"
+                                stroke-width="2" />
+                            <circle cx="80" cy="80" r="7" fill="#2a0f02" opacity="0.8" />
+                        </svg>
+                        <!-- draggable screw -->
+                        <div id="ps-screw" class="puzzle-piece" draggable="true">
+                            <svg viewBox="0 0 32 56" width="32" height="56">
+                                <rect x="4" y="0" width="24" height="10" rx="3" fill="#8a8a8a" stroke="#555"
+                                    stroke-width="1.5" />
+                                <line x1="8" y1="5" x2="24" y2="5" stroke="#555" stroke-width="1.5" />
+                                <line x1="16" y1="1" x2="16" y2="9" stroke="#555" stroke-width="1.5" />
+                                <rect x="12" y="10" width="8" height="36" rx="2" fill="#9e9e9e" stroke="#707070"
+                                    stroke-width="1" />
+                                <path d="M12 46 Q16 55 20 46" fill="#8a8a8a" stroke="#555" stroke-width="1" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="tile-check">✓</div>
+                </div>
+
+                <!-- ──── SAW PUZZLE ──── -->
+                <div class="puzzle-tile" id="ptile-saw" data-puzzle="saw">
+                    <div class="tile-label">Gergaji Kayunya</div>
+                    <div class="puzzle-scene" id="pscene-saw">
+                        <svg class="puzzle-svg" viewBox="0 0 160 120">
+                            <!-- wood block left half -->
+                            <rect id="ps-wood-l" x="20" y="30" width="55" height="70" rx="4" fill="#c08535"
+                                stroke="#7a4a18" stroke-width="2" />
+                            <rect x="20" y="30" width="55" height="10" rx="2" fill="#d49240" opacity="0.7" />
+                            <line x1="20" y1="60" x2="75" y2="60" stroke="#8a5520" stroke-width="2" opacity="0.5" />
+                            <line x1="20" y1="75" x2="75" y2="75" stroke="#8a5520" stroke-width="2" opacity="0.5" />
+                            <!-- wood block right half -->
+                            <rect id="ps-wood-r" x="85" y="30" width="55" height="70" rx="4" fill="#c08535"
+                                stroke="#7a4a18" stroke-width="2" />
+                            <rect x="85" y="30" width="55" height="10" rx="2" fill="#d49240" opacity="0.7" />
+                            <line x1="85" y1="60" x2="140" y2="60" stroke="#8a5520" stroke-width="2" opacity="0.5" />
+                            <line x1="85" y1="75" x2="140" y2="75" stroke="#8a5520" stroke-width="2" opacity="0.5" />
+                            <!-- saw cut line -->
+                            <line id="ps-cut-line" x1="80" y1="22" x2="80" y2="108" stroke="#d4b050" stroke-width="2"
+                                stroke-dasharray="4 3" opacity="0.7" />
+                        </svg>
+                        <!-- draggable saw -->
+                        <div id="ps-saw" class="puzzle-piece saw-piece">
+                            <svg viewBox="0 0 80 30" width="80" height="30">
+                                <rect x="0" y="4" width="60" height="8" rx="2" fill="#9e9e9e" stroke="#555"
+                                    stroke-width="1" />
+                                <rect x="60" y="0" width="20" height="16" rx="3" fill="#b07736" stroke="#7a4a18"
+                                    stroke-width="1.5" />
+                                <!-- teeth -->
+                                <polyline
+                                    points="0,12 4,20 8,12 12,20 16,12 20,20 24,12 28,20 32,12 36,20 40,12 44,20 48,12 52,20 56,12"
+                                    fill="none" stroke="#707070" stroke-width="1.5" stroke-linejoin="miter" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="tile-check">✓</div>
+                </div>
+
+                <!-- ──── NAIL PUZZLE ──── -->
+                <div class="puzzle-tile" id="ptile-nail" data-puzzle="nail">
+                    <div class="tile-label">Paku Kayunya</div>
+                    <div class="puzzle-scene" id="pscene-nail">
+                        <svg class="puzzle-svg" viewBox="0 0 160 120">
+                            <!-- plank -->
+                            <rect x="10" y="70" width="140" height="40" rx="4" fill="#b07736" stroke="#7a4a18"
+                                stroke-width="2" />
+                            <rect x="10" y="70" width="140" height="8" rx="2" fill="#c9904a" />
+                            <line x1="10" y1="88" x2="150" y2="88" stroke="#8a5520" stroke-width="1.5" opacity="0.5" />
+                            <!-- nail (starts partial, will animate to full) -->
+                            <g id="ps-nail">
+                                <ellipse cx="80" cy="35" rx="12" ry="5" fill="#8a8a8a" stroke="#6a6a6a"
+                                    stroke-width="1.5" />
+                                <ellipse cx="80" cy="34" rx="9" ry="3.5" fill="#b0b0b0" />
+                                <rect x="77" y="39" width="6" height="40" rx="1" fill="#9e9e9e" stroke="#787878"
+                                    stroke-width="0.5" />
+                                <rect x="78" y="39" width="2.5" height="40" fill="#c4c4c4" opacity="0.4" />
+                                <path d="M77 79 L80 87 L83 79 Z" fill="#8a8a8a" />
+                            </g>
+                        </svg>
+                        <!-- clickable hammer -->
+                        <button id="ps-hammer" class="puzzle-btn">
+                            <svg viewBox="0 0 64 64" width="54" height="54">
+                                <rect x="8" y="18" width="42" height="18" rx="5" fill="#6e6e6e" stroke="#4a4a4a"
+                                    stroke-width="2" />
+                                <rect x="38" y="36" width="8" height="22" rx="3" fill="#b07736" stroke="#8a5520"
+                                    stroke-width="1.5" />
+                                <rect x="10" y="20" width="38" height="5" rx="2" fill="#9e9e9e" opacity="0.4" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="tile-check">✓</div>
+                </div>
+
+                <!-- ──── PLIERS PUZZLE ──── -->
+                <div class="puzzle-tile" id="ptile-pliers" data-puzzle="pliers">
+                    <div class="tile-label">Luruskan Besinya</div>
+                    <div class="puzzle-scene" id="pscene-pliers">
+                        <svg class="puzzle-svg" viewBox="0 0 160 120">
+                            <!-- bent rod (will animate to straight) -->
+                            <polyline id="ps-rod" points="40,30 70,60 100,40 120,80" fill="none" stroke="#8a8a8a"
+                                stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+                            <!-- rod end caps -->
+                            <circle cx="40" cy="30" r="5" fill="#707070" />
+                            <circle cx="120" cy="80" r="5" fill="#707070" />
+                        </svg>
+                        <!-- draggable pliers -->
+                        <div id="ps-pliers" class="puzzle-piece pliers-piece">
+                            <svg viewBox="0 0 56 70" width="52" height="64">
+                                <!-- left arm -->
+                                <path d="M8,0 L16,28 L12,32 L4,60 Q2,66 8,68 Q14,70 16,64 L22,38 L28,34" fill="none"
+                                    stroke="#707070" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <!-- right arm -->
+                                <path d="M48,0 L40,28 L44,32 L52,60 Q54,66 48,68 Q42,70 40,64 L34,38 L28,34" fill="none"
+                                    stroke="#707070" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <!-- pivot -->
+                                <circle cx="28" cy="34" r="5" fill="#9e9e9e" stroke="#555" stroke-width="1.5" />
+                                <!-- grip -->
+                                <rect x="4" y="0" width="12" height="24" rx="4" fill="#c03020" opacity="0.8" />
+                                <rect x="40" y="0" width="12" height="24" rx="4" fill="#c03020" opacity="0.8" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="tile-check">✓</div>
+                </div>
+
+            </div><!-- /puzzle-grid -->
+
+            <!-- ── success reveal ── -->
+            <div id="puzzle-success-reveal">
+                <div id="puzzle-house">
+                    <svg viewBox="0 0 120 110" width="110" height="100">
+                        <!-- house body -->
+                        <rect x="15" y="55" width="90" height="55" rx="3" fill="#c8893a" stroke="#7a4a18"
+                            stroke-width="2.5" />
+                        <!-- roof -->
+                        <polygon points="5,58 60,8 115,58" fill="#8a5520" stroke="#5c3a10" stroke-width="2.5" />
+                        <polygon points="5,58 60,8 115,58" fill="#a06828" stroke="none" opacity="0.5" />
+                        <!-- door -->
+                        <rect x="45" y="75" width="30" height="35" rx="4" fill="#7a4a18" />
+                        <rect x="47" y="77" width="26" height="32" rx="3" fill="#5c3010" opacity="0.6" />
+                        <circle cx="70" cy="93" r="3" fill="#d4a040" />
+                        <!-- windows -->
+                        <rect x="20" y="65" width="22" height="22" rx="3" fill="#8ab8d4" stroke="#7a4a18"
+                            stroke-width="1.5" />
+                        <line x1="31" y1="65" x2="31" y2="87" stroke="#7a4a18" stroke-width="1" />
+                        <line x1="20" y1="76" x2="42" y2="76" stroke="#7a4a18" stroke-width="1" />
+                        <rect x="78" y="65" width="22" height="22" rx="3" fill="#8ab8d4" stroke="#7a4a18"
+                            stroke-width="1.5" />
+                        <line x1="89" y1="65" x2="89" y2="87" stroke="#7a4a18" stroke-width="1" />
+                        <line x1="78" y1="76" x2="100" y2="76" stroke="#7a4a18" stroke-width="1" />
+                        <!-- chimney -->
+                        <rect x="75" y="14" width="14" height="26" rx="2" fill="#9a6228" />
+                    </svg>
+                    <p>🎉 Bengkel Terbuka!</p>
+                </div>
+            </div>
+
+        </div><!-- /puzzle-board -->
+    </div><!-- /puzzle-overlay -->
+
     <!-- ═══════════════ CUSTOM CURSOR (nail) ═══════════════ -->
     <div id="nail-cursor">
         <svg viewBox="0 0 24 64" width="20" height="52">
@@ -67,33 +307,33 @@
         <div class="menu-bar-left">
             <div class="menu-apple" title="WoodDesk">🪵</div>
             <div class="menu-item" data-menu="file">
-                <span class="menu-label">File</span>
+                <span class="menu-label">Arsip</span>
                 <div class="menu-dropdown">
-                    <div class="menu-option" data-action="new-window">New Window</div>
-                    <div class="menu-option" data-action="new-folder">New Folder</div>
+                    <div class="menu-option" data-action="new-window">Jendela Baru</div>
+                    <div class="menu-option" data-action="new-folder">Folder Baru</div>
                     <div class="menu-divider"></div>
-                    <div class="menu-option" data-action="close-all">Close All</div>
+                    <div class="menu-option" data-action="close-all">Tutup Semua</div>
                 </div>
             </div>
             <div class="menu-item" data-menu="tools">
-                <span class="menu-label">Tools</span>
+                <span class="menu-label">Alat</span>
                 <div class="menu-dropdown">
-                    <div class="menu-option" data-action="open-workshop">Workshop</div>
-                    <div class="menu-option" data-action="open-calculator">Ruler Calculator</div>
-                    <div class="menu-option" data-action="open-notes">Notes</div>
+                    <div class="menu-option" data-action="open-workshop">Bengkel Alat</div>
+                    <div class="menu-option" data-action="open-calculator">Kalkulator Penggaris</div>
+                    <div class="menu-option" data-action="open-notes">Catatan</div>
                 </div>
             </div>
             <div class="menu-item" data-menu="view">
-                <span class="menu-label">View</span>
+                <span class="menu-label">Tampilan</span>
                 <div class="menu-dropdown">
-                    <div class="menu-option" data-action="arrange">Arrange Icons</div>
-                    <div class="menu-option" data-action="refresh">Refresh Desktop</div>
+                    <div class="menu-option" data-action="arrange">Rapikan Ikon</div>
+                    <div class="menu-option" data-action="refresh">Muat Ulang Desktop</div>
                 </div>
             </div>
             <div class="menu-item" data-menu="help">
-                <span class="menu-label">Help</span>
+                <span class="menu-label">Bantuan</span>
                 <div class="menu-dropdown">
-                    <div class="menu-option" data-action="about">About WoodDesk</div>
+                    <div class="menu-option" data-action="about">Tentang WoodDesk</div>
                 </div>
             </div>
         </div>
@@ -175,7 +415,7 @@
         <div class="desktop-icons" id="desktop-icons">
 
             <!-- Folder: wooden box -->
-            <div class="desktop-icon" data-type="folder" data-name="My Projects">
+            <div class="desktop-icon" data-type="folder" data-name="Proyek Saya">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 56" width="56" height="48">
                         <rect x="2" y="12" width="60" height="42" rx="4" fill="#b07736" stroke="#8a5a20"
@@ -190,11 +430,11 @@
                         <circle cx="32" cy="32" r="2.5" fill="#6b4515" />
                     </svg>
                 </div>
-                <span class="icon-label">My Projects</span>
+                <span class="icon-label">Proyek Saya</span>
             </div>
 
             <!-- Folder: wooden box -->
-            <div class="desktop-icon" data-type="folder" data-name="Documents">
+            <div class="desktop-icon" data-type="folder" data-name="Dokumen">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 56" width="56" height="48">
                         <rect x="2" y="12" width="60" height="42" rx="4" fill="#a06828" stroke="#7a4e18"
@@ -208,11 +448,11 @@
                         <circle cx="32" cy="32" r="2.5" fill="#5c3a10" />
                     </svg>
                 </div>
-                <span class="icon-label">Documents</span>
+                <span class="icon-label">Dokumen</span>
             </div>
 
             <!-- App: Hammer -->
-            <div class="desktop-icon" data-type="app" data-name="Workshop">
+            <div class="desktop-icon" data-type="app" data-name="Bengkel Alat">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 64" width="56" height="56">
                         <!-- handle -->
@@ -225,11 +465,11 @@
                         <rect x="12" y="10" width="40" height="10" rx="3" fill="#9a9a9a" opacity="0.4" />
                     </svg>
                 </div>
-                <span class="icon-label">Workshop</span>
+                <span class="icon-label">Bengkel Alat</span>
             </div>
 
             <!-- App: Saw -->
-            <div class="desktop-icon" data-type="app" data-name="Saw Cutter">
+            <div class="desktop-icon" data-type="app" data-name="Gergaji Kayu">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 64" width="56" height="56">
                         <!-- blade -->
@@ -244,11 +484,11 @@
                         <rect x="46" y="12" width="12" height="10" rx="3" fill="#c9904a" />
                     </svg>
                 </div>
-                <span class="icon-label">Saw Cutter</span>
+                <span class="icon-label">Gergaji Kayu</span>
             </div>
 
             <!-- App: Ruler -->
-            <div class="desktop-icon" data-type="app" data-name="Ruler Calculator">
+            <div class="desktop-icon" data-type="app" data-name="Kalkulator Alat">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 64" width="56" height="56">
                         <rect x="8" y="14" width="48" height="36" rx="3" fill="#d4a050" stroke="#a07030"
@@ -267,11 +507,11 @@
                         <text x="39" y="36" font-size="7" fill="#6b4515" font-family="serif">3</text>
                     </svg>
                 </div>
-                <span class="icon-label">Ruler Calc</span>
+                <span class="icon-label">Kalkulator</span>
             </div>
 
             <!-- App: Chisel -->
-            <div class="desktop-icon" data-type="app" data-name="Notes">
+            <div class="desktop-icon" data-type="app" data-name="Catatan Kayu">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 64" width="56" height="56">
                         <!-- blade -->
@@ -286,11 +526,11 @@
                         <rect x="28" y="32" width="4" height="24" rx="2" fill="#c9904a" opacity="0.5" />
                     </svg>
                 </div>
-                <span class="icon-label">Notes</span>
+                <span class="icon-label">Catatan Kayu</span>
             </div>
 
             <!-- App: Nails -->
-            <div class="desktop-icon" data-type="app" data-name="About WoodDesk">
+            <div class="desktop-icon" data-type="app" data-name="Tentang WoodDesk">
                 <div class="icon-image">
                     <svg viewBox="0 0 64 64" width="56" height="56">
                         <!-- nail 1 -->
@@ -307,7 +547,7 @@
                         <polygon points="28,50 32,50 30,56" fill="#999" />
                     </svg>
                 </div>
-                <span class="icon-label">About</span>
+                <span class="icon-label">Tentang</span>
             </div>
         </div>
 
@@ -329,7 +569,7 @@
 
         <!-- CENTER: Pinned app icons -->
         <div id="dock-center">
-            <div class="dock-pin" data-action="open-workshop" title="Workshop">
+            <div class="dock-pin" data-action="open-workshop" title="Bengkel Alat">
                 <div class="dock-pin-img">
                     <svg viewBox="0 0 48 48" width="32" height="32">
                         <rect x="4" y="14" width="40" height="16" rx="4" fill="#7a7a7a" />
@@ -337,11 +577,11 @@
                         <rect x="19" y="30" width="10" height="14" rx="2" fill="#b07736" />
                     </svg>
                 </div>
-                <div class="dock-pin-label">Workshop</div>
+                <div class="dock-pin-label">Bengkel Alat</div>
                 <div class="dock-pin-dot"></div>
             </div>
 
-            <div class="dock-pin" data-action="open-calculator" title="Ruler Calc">
+            <div class="dock-pin" data-action="open-calculator" title="Kalkulator Alat">
                 <div class="dock-pin-img">
                     <svg viewBox="0 0 48 48" width="32" height="32">
                         <rect x="4" y="10" width="40" height="28" rx="4" fill="#d4a050" stroke="#a07030"
@@ -353,11 +593,11 @@
                         <line x1="36" y1="12" x2="36" y2="22" stroke="#8a5a20" stroke-width="1.5" />
                     </svg>
                 </div>
-                <div class="dock-pin-label">Ruler Calc</div>
+                <div class="dock-pin-label">Kalkulator Alat</div>
                 <div class="dock-pin-dot"></div>
             </div>
 
-            <div class="dock-pin" data-action="open-notes" title="Notes">
+            <div class="dock-pin" data-action="open-notes" title="Catatan Kayu">
                 <div class="dock-pin-img">
                     <svg viewBox="0 0 48 48" width="32" height="32">
                         <rect x="8" y="4" width="32" height="40" rx="3" fill="#f5e6c8" stroke="#c9a060"
@@ -368,11 +608,11 @@
                         <line x1="14" y1="32" x2="30" y2="32" stroke="#c9a060" />
                     </svg>
                 </div>
-                <div class="dock-pin-label">Notes</div>
+                <div class="dock-pin-label">Catatan Kayu</div>
                 <div class="dock-pin-dot"></div>
             </div>
 
-            <div class="dock-pin" data-action="about" title="About">
+            <div class="dock-pin" data-action="about" title="Tentang WoodDesk">
                 <div class="dock-pin-img">
                     <svg viewBox="0 0 48 48" width="32" height="32">
                         <circle cx="24" cy="24" r="20" fill="#8a5a20" />
@@ -381,7 +621,7 @@
                             font-family="serif">i</text>
                     </svg>
                 </div>
-                <div class="dock-pin-label">About</div>
+                <div class="dock-pin-label">Tentang</div>
                 <div class="dock-pin-dot"></div>
             </div>
 
@@ -392,7 +632,9 @@
 
     </footer>
 
+    <script src="puzzle.js"></script>
     <script src="app.js"></script>
+
 </body>
 
 </html>
